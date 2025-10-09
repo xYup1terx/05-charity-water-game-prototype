@@ -13,3 +13,58 @@ Secondary Colors:
 - Pink:       #F16061
 
 */
+body {
+  background: #111;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  margin: 0;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.hidden {
+  display: none;
+}
+
+canvas {
+  background: #222;
+  border: 6px solid #f8b500;
+  border-radius: 10px;
+}
+
+#hud {
+  display: flex;
+  justify-content: space-between;
+  width: 480px;
+  margin: 10px auto;
+  font-size: 1rem;
+}
+
+button {
+  background: #f8b500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #111;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: #ffcf33;
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  color: #aaa;
+  font-size: 0.9rem;
+}
