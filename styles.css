@@ -35,7 +35,7 @@ body {
 
 canvas {
   background: #222;
-  border: 6px solid #f8b500;
+  border: 6px solid #ffc907;
   border-radius: 10px;
 }
 
@@ -48,7 +48,7 @@ canvas {
 }
 
 button {
-  background: #f8b500;
+  background: #ffc907;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -59,7 +59,7 @@ button {
 }
 
 button:hover {
-  background: #ffcf33;
+  background: #8BD1CB;
 }
 
 footer {
