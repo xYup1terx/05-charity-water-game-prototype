@@ -18,15 +18,15 @@ let interval;
 let gameOver = false;
 
 // Ball
-let ballRadius = 8;
+let ballRadius = canvas.width * 0.01; // Scales with canvas size
 let x = canvas.width / 2;
-let y = canvas.height - 30;
-let dx = 2;
-let dy = -2;
+let y = canvas.height - canvas.height * 0.05;
+let dx = canvas.width * 0.005;
+let dy = -canvas.height * 0.005;
 
 // Paddle
-const paddleHeight = 10;
-const paddleWidth = 75;
+const paddleHeight = canvas.height * 0.02;
+const paddleWidth = canvas.width * 0.20;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
@@ -34,11 +34,13 @@ let leftPressed = false;
 // Bricks
 const brickRowCount = 4;
 const brickColumnCount = 6;
-const brickWidth = 60;
-const brickHeight = 15;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+const brickWidth = canvas.width * 0.11;
+const brickHeight = canvas.height * 0.04;
+const brickPadding = canvas.width * 0.012;
+const brickOffsetTop = canvas.height * 0.10;
+// Center the bricks horizontally
+const totalBricksWidth = brickColumnCount * brickWidth + (brickColumnCount - 1) * brickPadding;
+const brickOffsetLeft = (canvas.width - totalBricksWidth) / 2;
 
 let bricks = [];
 
@@ -166,15 +168,19 @@ function startGame() {
   startScreen.classList.add("hidden");
   gameScreen.classList.remove("hidden");
   endScreen.classList.add("hidden");
+
+  // Recalculate sizes in case canvas size changed
+  ballRadius = canvas.width * 0.015;
+  x = canvas.width / 2;
+  y = canvas.height - canvas.height * 0.05;
+  dx = canvas.width * 0.005;
+  dy = -canvas.height * 0.005;
+  paddleX = (canvas.width - paddleWidth) / 2;
+
   initBricks();
   score = 0;
   scoreDisplay.textContent = 0;
   gameOver = false;
-  x = canvas.width / 2;
-  y = canvas.height - 30;
-  dx = 2;
-  dy = -2;
-  paddleX = (canvas.width - paddleWidth) / 2;
   clearInterval(interval);
   timer = 0;
   interval = setInterval(() => {
