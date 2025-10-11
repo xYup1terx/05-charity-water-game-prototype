@@ -38,6 +38,7 @@
       <div id="hud">
   <span>Score: <span id="score">0</span></span>
   <button id="pauseBtn">Pause</button>
+  <img src="img/water-can-transparent.png" alt="paddle-icon" style="width:70px; height:70px; vertical-align:middle; margin:0 8px;">
   <button id="resetBtn">Reset</button>
   <span id="timer">Elapsed Time: 0s</span>
       </div>
@@ -46,9 +47,12 @@
 
     <!-- End Screen -->
     <div id="endScreen" class="screen hidden">
-      <h2 id="endMessage"></h2>
-      <button id="restartBtn">Restart</button>
-      <button id="homeBtn">Return to Start</button>
+      <div id="confetti"></div>
+      <div class="title-box">
+        <h2 id="endMessage"></h2>
+        <button id="restartBtn">Restart</button>
+        <button id="homeBtn">Return to Start</button>
+      </div>
     </div>
   </div>
   <script src="script.js"></script>

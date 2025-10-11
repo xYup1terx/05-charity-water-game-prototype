@@ -219,6 +219,19 @@ function startGame() {
   draw();
 }
 
+function showConfetti() {
+  const confetti = document.getElementById("confetti");
+  confetti.innerHTML = "";
+  for (let i = 0; i < 40; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 90 + "%";
+    piece.style.top = Math.random() * 20 + "%";
+    piece.style.background = ["#FFC907", "#2E9DF7", "#8BD1CB", "#4FCB53", "#FF902A", "#F5402C", "#F16061"][Math.floor(Math.random() * 7)];
+    confetti.appendChild(piece);
+  }
+  setTimeout(() => { confetti.innerHTML = ""; }, 1500);
+}
 function endGame(win) {
   gameOver = true;
   clearInterval(interval);
@@ -226,7 +239,8 @@ function endGame(win) {
   endScreen.classList.remove("hidden");
   endMessage.textContent = win
     ? "🎉 You Win! Clean water for all!"
-    : "💧 Game Over! Try again to help more communities!";
+    : "💧 Game Over! Try again to help more communities! 💧";
+  if (win) showConfetti();
 }
 
 startBtn.addEventListener("click", startGame);

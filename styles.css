@@ -1,3 +1,8 @@
+#hud button {
+  height: 40px;
+  padding: 0 20px;
+  font-size: 1rem;
+}
 .how-to-play {
   margin-top: 48px;
 }
@@ -120,4 +125,24 @@ footer a {
   display: inline-block;
   min-width: 80px; /* Adjust as needed */
   text-align: center;
+}
+
+#confetti {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+.confetti-piece {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: confetti-fall 1.2s linear forwards;
+}
+@keyframes confetti-fall {
+  to {
+    transform: translateY(400px) rotate(360deg);
+    opacity: 0;
+  }
 }
