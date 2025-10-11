@@ -68,3 +68,8 @@ footer {
   color: #aaa;
   font-size: 0.9rem;
 }
+
+footer a {
+  color: #fff;
+  text-decoration: underline; /* optional, for visibility */
+}
