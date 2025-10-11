@@ -11,11 +11,14 @@ const restartBtn = document.getElementById("restartBtn");
 const homeBtn = document.getElementById("homeBtn");
 const scoreDisplay = document.getElementById("score");
 const endMessage = document.getElementById("endMessage");
+const pauseBtn = document.getElementById("pauseBtn");
+const resetBtn = document.getElementById("resetBtn");
 
 let score = 0;
 let timer = 0;
 let interval;
 let gameOver = false;
+let paused = false;
 
 // Ball
 let ballRadius = canvas.width * 0.01; // Scales with canvas size
@@ -34,7 +37,7 @@ let leftPressed = false;
 // Bricks
 const brickRowCount = 4;
 const brickColumnCount = 6;
-const brickWidth = canvas.width * 0.11;
+const brickWidth = canvas.width * 0.13;
 const brickHeight = canvas.height * 0.04;
 const brickPadding = canvas.width * 0.012;
 const brickOffsetTop = canvas.height * 0.10;
@@ -113,7 +116,7 @@ function collisionDetection() {
 }
 
 function draw() {
-  if (gameOver) return;
+  if (gameOver || paused) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
@@ -143,6 +146,31 @@ function draw() {
   }
 
   requestAnimationFrame(draw);
+}
+// Pause button toggles paused state
+if (pauseBtn) {
+  pauseBtn.addEventListener("click", () => {
+    paused = !paused;
+    if (paused) {
+      clearInterval(interval); // Stop the timer
+    } else {
+      interval = setInterval(() => {
+        timer++;
+        document.getElementById("timer").textContent = `Elapsed Time: ${timer}s`;
+      }, 1000);
+      draw();
+    }
+    pauseBtn.textContent = paused ? "Resume" : "Pause";
+  });
+}
+
+// Reset button restarts the game
+if (resetBtn) {
+  resetBtn.addEventListener("click", () => {
+    paused = false;
+    pauseBtn.textContent = "Pause";
+    startGame();
+  });
 }
 
 document.addEventListener("keydown", keyDownHandler);
@@ -183,6 +211,7 @@ function startGame() {
   gameOver = false;
   clearInterval(interval);
   timer = 0;
+  document.getElementById("timer").textContent = `Elapsed Time: 0s`;
   interval = setInterval(() => {
     timer++;
     document.getElementById("timer").textContent = `Elapsed Time: ${timer}s`;
