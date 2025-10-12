@@ -1,3 +1,44 @@
+// Touch controls for mobile
+const leftBtn = document.getElementById('leftBtn');
+const rightBtn = document.getElementById('rightBtn');
+
+if (leftBtn && rightBtn) {
+  // When left button is pressed and held, move paddle left
+  leftBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    leftPressed = true;
+  });
+  leftBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    leftPressed = false;
+  });
+  leftBtn.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    leftPressed = true;
+  });
+  leftBtn.addEventListener('mouseup', function(e) {
+    e.preventDefault();
+    leftPressed = false;
+  });
+
+  // When right button is pressed and held, move paddle right
+  rightBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    rightPressed = true;
+  });
+  rightBtn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    rightPressed = false;
+  });
+  rightBtn.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    rightPressed = true;
+  });
+  rightBtn.addEventListener('mouseup', function(e) {
+    e.preventDefault();
+    rightPressed = false;
+  });
+}
 // Log a message to the console to ensure the script is linked correctly
 console.log('JavaScript file is linked correctly.');
 const canvas = document.getElementById("gameCanvas");
