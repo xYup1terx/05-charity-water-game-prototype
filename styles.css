@@ -1,3 +1,14 @@
+@media (max-width: 500px) {
+  .how-to-play {
+    margin-bottom: 10px !important;
+  }
+  footer {
+    position: relative !important;
+    width: 100vw !important;
+    margin-top: 12px !important;
+    z-index: 1 !important;
+  }
+}
 /* --- Final override for HUD on very small screens --- */
 @media (max-width: 662px) {
   #hud {
