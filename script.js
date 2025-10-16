@@ -102,12 +102,17 @@ function drawBricks() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
       if (bricks[c][r].status === 1) {
-        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+        const bw = (typeof window.brickWidth !== 'undefined') ? window.brickWidth : brickWidth;
+        const bh = (typeof window.brickHeight !== 'undefined') ? window.brickHeight : brickHeight;
+        const bp = (typeof window.brickPadding !== 'undefined') ? window.brickPadding : brickPadding;
+        const bo = (typeof window.brickOffsetLeft !== 'undefined') ? window.brickOffsetLeft : brickOffsetLeft;
+        const bt = (typeof window.brickOffsetTop !== 'undefined') ? window.brickOffsetTop : brickOffsetTop;
+        const brickX = c * (bw + bp) + bo;
+        const brickY = r * (bh + bp) + bt;
         bricks[c][r].x = brickX;
         bricks[c][r].y = brickY;
         ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.rect(brickX, brickY, bw, bh);
         ctx.fillStyle = "#0077ff";
         ctx.fill();
         ctx.closePath();
@@ -125,8 +130,10 @@ function drawBall() {
 }
 
 function drawPaddle() {
+  const ph = (typeof window.paddleHeight !== 'undefined') ? window.paddleHeight : paddleHeight;
+  const pw = (typeof window.paddleWidth !== 'undefined') ? window.paddleWidth : paddleWidth;
   ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - paddleHeight - 10, paddleWidth, paddleHeight);
+  ctx.rect(paddleX, canvas.height - ph - 10, pw, ph);
   ctx.fillStyle = "#f8b500";
   ctx.fill();
   ctx.closePath();
@@ -137,11 +144,13 @@ function collisionDetection() {
     for (let r = 0; r < brickRowCount; r++) {
       let b = bricks[c][r];
       if (b.status === 1) {
+        const bw = (typeof window.brickWidth !== 'undefined') ? window.brickWidth : brickWidth;
+        const bh = (typeof window.brickHeight !== 'undefined') ? window.brickHeight : brickHeight;
         if (
           x > b.x &&
-          x < b.x + brickWidth &&
+          x < b.x + bw &&
           y > b.y &&
-          y < b.y + brickHeight
+          y < b.y + bh
         ) {
           dy = -dy;
           b.status = 0;
@@ -170,9 +179,12 @@ function draw() {
   if (y + dy < ballRadius) {
     dy = -dy;
   } else if (y + dy > canvas.height - ballRadius - 10) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
+    // Use current paddle width (supports resized/mobile values)
+    const currentPaddleWidth = (typeof window.paddleWidth !== 'undefined') ? window.paddleWidth : paddleWidth;
+    if (x > paddleX && x < paddleX + currentPaddleWidth) {
       dy = -dy;
     } else {
+      // Ball missed paddle -> game over
       endGame(false);
     }
   }
@@ -180,10 +192,13 @@ function draw() {
   x += dx;
   y += dy;
 
-  if (rightPressed && paddleX < canvas.width - paddleWidth) {
-    paddleX += 5;
-  } else if (leftPressed && paddleX > 0) {
-    paddleX -= 5;
+  // Move paddle using current paddle width and clamp to canvas edges
+  const currentPaddleWidth = (typeof window.paddleWidth !== 'undefined') ? window.paddleWidth : paddleWidth;
+  const moveSpeed = Math.max(4, Math.round(canvas.width * 0.005));
+  if (rightPressed) {
+    paddleX = Math.min(canvas.width - currentPaddleWidth, paddleX + moveSpeed);
+  } else if (leftPressed) {
+    paddleX = Math.max(0, paddleX - moveSpeed);
   }
 
   requestAnimationFrame(draw);
@@ -239,12 +254,43 @@ function startGame() {
   endScreen.classList.add("hidden");
 
   // Recalculate sizes in case canvas size changed
-  ballRadius = canvas.width * 0.015;
+  // If small screen, make the internal canvas taller and scale up ball/paddle
+  if (window.innerWidth <= 520) {
+    // Set internal drawing buffer to match displayed CSS dimensions
+    canvas.width = Math.floor(window.innerWidth * 0.96);
+    canvas.height = Math.floor(window.innerHeight * 0.76);
+  } else {
+    // default internal canvas size
+    canvas.width = 960;
+    canvas.height = 600;
+  }
+
+  // recompute sizes based on current canvas size
+  ballRadius = Math.max(6, canvas.width * 0.02); // slightly larger on small screens
   x = canvas.width / 2;
   y = canvas.height - canvas.height * 0.05;
   dx = canvas.width * 0.005;
   dy = -canvas.height * 0.005;
-  paddleX = (canvas.width - paddleWidth) / 2;
+
+  // update paddle sizes
+  // note: paddleWidth and paddleHeight were consts earlier; recreate local vars instead
+  const newPaddleHeight = canvas.height * 0.03;
+  const newPaddleWidth = canvas.width * 0.22;
+  // assign to globals used by drawPaddle and logic
+  // overwrite the previously computed paddleHeight/paddleWidth by updating drawing references
+  // We'll set paddleHeight/paddleWidth as variables on window for simplicity
+  window.paddleHeight = newPaddleHeight;
+  window.paddleWidth = newPaddleWidth;
+  paddleX = (canvas.width - newPaddleWidth) / 2;
+
+  // Recompute brick sizes
+  // These were declared as const earlier; set window-scoped replacements used by drawing
+  window.brickWidth = canvas.width * 0.13;
+  window.brickHeight = canvas.height * 0.04;
+  window.brickPadding = canvas.width * 0.012;
+  window.brickOffsetTop = canvas.height * 0.10;
+  const totalBricksWidthLocal = brickColumnCount * window.brickWidth + (brickColumnCount - 1) * window.brickPadding;
+  window.brickOffsetLeft = (canvas.width - totalBricksWidthLocal) / 2;
 
   initBricks();
   score = 0;
